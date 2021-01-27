@@ -1,0 +1,8 @@
+name: pytorch
+channels:
+  - defaults
+dependencies:
+  - torchvision
+  - pytorch
+  - matplotlib
+prefix: /home/noam/anaconda3/envs/pytorch

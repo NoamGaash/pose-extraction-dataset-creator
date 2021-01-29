@@ -1,7 +1,6 @@
-conda activate pytorch
-
 for video in data/videos/*.mp4
 do
+	conda activate pytorch
 	FILENAME=$(basename $video)
 	mkdir -p output/$FILENAME/frames
 	mkdir -p output/$FILENAME/alphapose
@@ -35,6 +34,18 @@ do
 		cd libs/retiming/
 		bash datasets/prepare_iuv.sh ../../output/$FILENAME/alphapose
 		cd ../../
+	fi
+	if [ ! -f "output/$FILENAME/openpose_json_output/001_keypoints.json" ]; then
+		docker run -v $PWD/output/$FILENAME:/noam --gpus=all -it --rm -e NVIDIA_VISIBLE_DEVICES=0 cwaffles/openpose \
+		./build/examples/openpose/openpose.bin \
+		-image_dir ../noam/frames \
+		-hand -disable_blending -face \
+		-output_resolution 320x-1 \
+		-number_people_max 1 \
+		-no_gui_verbose \
+		--render_pose 0 \
+		-display 0 \
+		--write_json ../noam/openpose_json_output/
 	fi
 done
 

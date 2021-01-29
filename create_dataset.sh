@@ -47,6 +47,12 @@ do
 		-display 0 \
 		--write_json ../noam/openpose_json_output/
 	fi
+	conda activate back-matting
+	if [ ! -f "output/$FILENAME/background.png" ]; then
+		python background-extraction.py "$video" "output/$FILENAME/background.png"
+	fi
+
+
 done
 
 
